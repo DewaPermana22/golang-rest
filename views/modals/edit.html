@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Edit Product</title>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Edit Product</h2>
+      <form id="editProductForm">
+        <input type="hidden" id="productId" />
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Product Name</label>
+          <input type="text" id="productName" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400" required />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Category</label>
+          <select id="productCategory" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+            <option>Electronics</option>
+            <option>Clothing</option>
+            <option>Accessories</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-600 font-medium mb-1">Price ($)</label>
+          <input type="number" id="productPrice" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400" required />
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button type="button" onclick="window.parent.postMessage('closeModal', '*')" class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Save</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      // Simulasi fetch data dari ID produk
+      function loadProductData(productId) {
+        const productData = {
+          1: { name: "Product A", category: "Electronics", price: 199.99 },
+          2: { name: "Product B", category: "Clothing", price: 49.99 },
+        };
+        return productData[productId] || { name: "", category: "", price: "" };
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const productId = getQueryParam("id");
+        if (productId) {
+          const product = loadProductData(productId);
+          document.getElementById("productId").value = productId;
+          document.getElementById("productName").value = product.name;
+          document.getElementById("productCategory").value = product.category;
+          document.getElementById("productPrice").value = product.price;
+        }
+      });
+
+      document.getElementById("editProductForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert("Product Updated!");
+        window.parent.postMessage("closeModal", "*");
+      });
+    </script>
+  </body>
+</html>

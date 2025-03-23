@@ -1,23 +1,24 @@
 package utils
 
 import (
-	"database/sql"
+	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-var DB *sql.DB
+var DB *gorm.DB
 
 func Connection() {
-	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/rest-go")
+	dsn := "root:@tcp(localhost:3306)/rest-go?charset=utf8mb4&parseTime=True&loc=Local"
+	var err error
+	var db *gorm.DB
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB = db
 	if err != nil {
-		panic(err)
+		log.Fatal("Error connecting to database", err)
 	}
 
-	DB = db
+	log.Println("Connected to database")
 }
 
-// // See "Important settings" section.
-// db.SetConnMaxLifetime(time.Minute * 3)
-// db.SetMaxOpenConns(10)
-// db.SetMaxIdleConns(10)
